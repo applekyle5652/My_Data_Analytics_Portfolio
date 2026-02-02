@@ -5,7 +5,7 @@ This repository showcases my analytics projects, focusing on real-world business
 questions, clean analysis, and clear insights.
 
 ## 🔧 Skills
-- SQL (PostgreSQL, MySQL)
+- SQL (PostgreSQL)
 - Python (pandas, numpy, matplotlib, seaborn)
 - Data Visualization (Tableau, Power BI)
 - Excel / Google Sheets
