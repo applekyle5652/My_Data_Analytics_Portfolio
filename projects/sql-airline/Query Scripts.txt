@@ -1,0 +1,47 @@
+ -- Did you, will you make money?
+
+WITH revenue_per_flight AS (
+  SELECT 
+    ps.flight_id,
+    SUM(tp.price) AS revenue
+  FROM plane_seatings ps
+  INNER JOIN seats s ON ps.seat_row = s.row AND ps.seat_column = s.column AND ps.plane_id = s.plane_id
+  INNER JOIN flights f ON ps.flight_id = f.flight_id
+  INNER JOIN ticket_prices tp ON f.flight_number = tp.flight_number AND s.class = tp.class
+  WHERE ps.person_id IS NOT NULL
+  GROUP BY ps.flight_id
+),
+cost_per_flight AS (
+  SELECT 
+    f.flight_id,
+    ROUND(EXTRACT(EPOCH FROM (f.arrival_time - f.departure_date)) / 3600.0) * p.cost_per_hour AS cost
+  FROM flights f
+  INNER JOIN planes p ON f.plane_id = p.registration_number
+)
+SELECT SUM (r.revenue - c.cost)
+FROM revenue_per_flight r
+INNER JOIN cost_per_flight c ON r.flight_id = c.flight_id;
+
+-- How many seats are filled or remaining on a particular flight?
+
+WITH filled_seats AS (
+  SELECT COUNT(*) AS seats_filled FROM plane_seatings WHERE flight_id = 100 AND person_id IS NOT NULL
+), 
+remaining_seats AS (
+  SELECT COUNT(*) AS seats_remaining FROM plane_seatings WHERE flight_id = 100 AND person_id IS NULL
+)
+SELECT * FROM filled_seats
+CROSS JOIN remaining_seats;
+
+
+-- Departure and arrival times in local time zone.
+
+SELECT 
+    f.flight_number,
+    f.departure_date AT TIME ZONE a1.timezone AS local_departure_time,
+    f.arrival_time AT TIME ZONE a2.timezone AS local_arrival_time,
+    a1.city AS origin_city,
+    a2.city AS destination_city
+FROM flights f
+INNER  JOIN airport a1 ON f.origin = a1.iata_code
+INNER JOIN airport a2 ON f.destination = a2.iata_code;
