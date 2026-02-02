@@ -1,0 +1,334 @@
+CREATE SCHEMA airline; 
+
+SET search_path TO airline;
+
+-- PLANES 
+
+DROP TABLE IF EXISTS planes CASCADE; 
+CREATE TABLE planes (
+	name VARCHAR(64),
+	CONSTRAINT pk_planes PRIMARY KEY (name)
+); 
+
+INSERT INTO planes 
+VALUES ('BEEP'), 
+	('BOOP')
+; 
+
+-- SEATS 
+
+DROP TABLE IF EXISTS seats; 
+CREATE TABLE seats (
+    row INTEGER NOT NULL,
+    "column" CHAR(1) NOT NULL,
+    type VARCHAR(16) NOT NULL, 
+    plane VARCHAR(64) NOT NULL,
+    person_email VARCHAR(64) DEFAULT NULL, 
+    CONSTRAINT ck_row CHECK (
+        (type = 'first' AND row > 0 AND row <= 24 AND "column" IN ('A', 'B', 'C', 'D')) OR
+        (type = 'business' AND row > 24 AND row <= 48 AND "column" IN ('A', 'B', 'C', 'D', 'E', 'F'))
+    ),
+    CONSTRAINT ck_type CHECK (type IN ('first', 'business')), 
+    CONSTRAINT pk_plane_seat PRIMARY KEY (row, "column", plane), 
+    CONSTRAINT fk_plane FOREIGN KEY (plane) REFERENCES planes(name) ON UPDATE CASCADE 
+        ON DELETE CASCADE
+);
+
+
+WITH seat_first("column") AS (VALUES ('A'), ('B'), ('C'), ('D')),
+     seat_business("column") AS (VALUES ('A'), ('B'), ('C'), ('D'), ('E'), ('F')), 
+     plane(name) AS (VALUES ('BEEP'), ('BOOP'))
+
+INSERT INTO seats(row, "column", plane, type)
+SELECT 
+    gs.row_number, 
+    sf."column", 
+    p.name AS plane_name,
+    'first' AS type
+FROM generate_series(1, 12) AS gs(row_number)  
+CROSS JOIN seat_first sf  
+CROSS JOIN plane p
+
+UNION ALL
+
+SELECT 
+    gs.row_number, 
+    sb."column",  
+    p.name AS plane_name,
+    'business' AS type
+FROM generate_series(13, 36) AS gs(row_number)  
+CROSS JOIN seat_business sb  
+CROSS JOIN plane p;
+
+SELECT * FROM seats
+
+
+--- FLIGHT SCHEDULES 
+
+DROP TABLE flights;
+CREATE TABLE flights (
+    flight_id SERIAL PRIMARY KEY,
+    plane_name VARCHAR(64),
+    origin VARCHAR(64) DEFAULT 'Boston',
+    destination VARCHAR(64),
+    departure_time TIMESTAMPTZ,
+    arrival_time TIMESTAMPTZ,
+    flight_date DATE,
+    flight_day VARCHAR(16),
+    is_layover BOOLEAN DEFAULT FALSE,
+    layover_location VARCHAR(64),
+    trip_type VARCHAR(16) CHECK (trip_type IN ('Outbound', 'Return'))
+);
+
+
+INSERT INTO flights ( -- (Boston to London 7 AM Monday)
+    plane_name,
+    origin,
+    destination,
+    departure_time,
+    arrival_time,
+    flight_date,
+    flight_day,
+    is_layover,
+    layover_location,
+    trip_type
+)
+
+SELECT
+    'BOOP',
+    'Boston',
+    'London',
+    first_part_departure,
+    first_part_departure + INTERVAL '7 hours',  --Boston to London flight time
+    first_part_departure::DATE,
+    TRIM(TO_CHAR(first_part_departure, 'Day')),
+    FALSE,
+    NULL,
+    'Outbound'
+FROM (
+    SELECT
+        generate_series(
+            timezone('America/New_York', TIMESTAMP '2025-04-07 07:00:00'),
+            timezone('America/New_York', TIMESTAMP '2025-12-29 07:00:00'),
+            INTERVAL '1 week'
+        ) AS first_part_departure
+) AS boston_to_london
+
+UNION ALL
+
+SELECT -- (London to Ethiopia)
+    'BOOP',
+    'London',
+    'Ethiopia',
+    second_part_departure,
+    second_part_departure + INTERVAL '8 hours',  -- typical London → Ethiopia flight time
+    second_part_departure::DATE,
+    TRIM(TO_CHAR(second_part_departure, 'Day')),
+    TRUE,
+    'London',
+    'Outbound'
+FROM (
+    SELECT
+        (generate_series(
+            timezone('America/New_York', TIMESTAMP '2025-04-07 07:00:00'),
+            timezone('America/New_York', TIMESTAMP '2025-12-29 07:00:00'),
+            INTERVAL '1 week'
+        ) + INTERVAL '7 hours' + INTERVAL '3 hours') AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/London'
+        AS second_part_departure
+) AS london_to_ethiopia
+
+UNION ALL
+
+SELECT --  (Ethiopia to London Saturdays at 9 AM Ethiopian Time)
+    'BOOP',
+    'Ethiopia',
+    'London',
+    return_first_part,
+    return_first_part + INTERVAL '8 hours',  
+    return_first_part::DATE,
+    TRIM(TO_CHAR(return_first_part, 'Day')),
+    FALSE,
+    NULL,
+    'Return'
+FROM (
+    SELECT
+        generate_series(
+            timezone('Africa/Addis_Ababa', TIMESTAMP '2025-04-12 09:00:00'),
+            timezone('Africa/Addis_Ababa', TIMESTAMP '2025-12-27 09:00:00'),
+            INTERVAL '1 week'
+        ) AS return_first_part
+) AS ethiopia_to_london
+
+UNION ALL
+
+SELECT -- (London to Boston)
+    'BOOP',
+    'London',
+    'Boston',
+    return_second_part,
+    return_second_part + INTERVAL '7 hours',  -- typical London → Boston flight time
+    return_second_part::DATE,
+    TRIM(TO_CHAR(return_second_part, 'Day')),
+    TRUE,
+    'London',
+    'Return'
+FROM (
+    SELECT
+        (generate_series(
+            timezone('Africa/Addis_Ababa', TIMESTAMP '2025-04-12 09:00:00'),
+            timezone('Africa/Addis_Ababa', TIMESTAMP '2025-12-27 09:00:00'),
+            INTERVAL '1 week'
+        ) + INTERVAL '8 hours' + INTERVAL '3 hours') AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/London'
+        AS return_second_part
+) AS london_to_boston;
+
+INSERT INTO flights (
+    plane_name,
+    origin,
+    destination,
+    departure_time,
+    arrival_time,
+    flight_date,
+    flight_day,
+    is_layover,
+    layover_location,
+    trip_type
+)
+
+SELECT
+    'BEEP' AS plane_name,
+    'Boston' AS origin,
+    'China' AS destination,
+    outbound_flight_time,
+    outbound_flight_time + INTERVAL '14 hours' AS arrival_time,
+    outbound_flight_time::DATE AS flight_date,
+    TRIM(TO_CHAR(outbound_flight_time, 'Day')) AS flight_day,
+    FALSE AS is_layover,
+    NULL AS layover_location,
+    'Outbound' AS trip_type
+FROM (
+    SELECT
+        generate_series(
+            timezone('America/New_York', TIMESTAMP '2025-04-08 05:00:00'),
+            timezone('America/New_York', TIMESTAMP '2025-12-30 05:00:00'),
+            INTERVAL '1 week'
+        ) AS outbound_flight_time
+) AS outbound
+UNION ALL
+SELECT
+    'BEEP' AS plane_name,
+    'China' AS origin,
+    'Boston' AS destination,
+    return_flight_time,
+    return_flight_time + INTERVAL '13 hours' AS arrival_time,
+    return_flight_time::DATE AS flight_date,
+    TRIM(TO_CHAR(return_flight_time, 'Day')) AS flight_day,
+    FALSE AS is_layover,
+    NULL AS layover_location,
+    'Return' AS trip_type
+FROM (
+    SELECT
+        generate_series(
+            timezone('Asia/Shanghai', TIMESTAMP '2025-04-12 09:00:00'),
+            timezone('Asia/Shanghai', TIMESTAMP '2025-12-27 09:00:00'),
+            INTERVAL '1 week'
+        ) AS return_flight_time
+) AS return_flights;
+
+
+
+
+--- AIRPORT 
+CREATE TABLE airport 
+	name 
+	city
+	country 
+	current_time 
+	
+	
+
+--- 
+
+
+set search_path to airline
+	DROP TABLE IF EXISTS reservations;
+	CREATE TABLE reservations (
+	    	reservation_code CHAR(10) PRIMARY KEY,
+	    	booking_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	    	booker_id CHAR(9) NOT NULL, 
+	    	FOREIGN KEY (booker_id) REFERENCES people(person_id)
+	);
+	
+	SELECT * FROM people LIMIT 10 
+	
+	
+	-- Create reservation code -> assign some of them to people. AND THEN assign them to a seat on a plane and make sure that they are on the same plane
+	-- FIrst create 1 reservation code assign to 2 people and make sure they are on the same flight 
+	-- create bridge table and then insert into reservations and make it distinct 
+
+INSERT INTO reservation_passengers (reservation_code, person_id)
+
+(
+  WITH 
+  reservation_code(code) AS (
+    SELECT 
+      chr(random(65,90)) || random(0,9) || 
+      chr(random(65,90)) || random(0,9) || 
+      chr(random(65,90)) || random(0,9) ||
+      chr(random(65,90)) || random(0,9) ||
+      chr(random(65,90)) || random(0,9) 
+    FROM generate_series(1,1)
+  ),
+  people(people_id) AS (
+    SELECT person_id FROM people LIMIT 3
+  )
+  SELECT code, people_id FROM reservation_code CROSS JOIN people
+)
+
+UNION
+
+(
+  WITH 
+  reservation_code(code) AS (
+    SELECT 
+      chr(random(65,90)) || random(0,9) || 
+      chr(random(65,90)) || random(0,9) || 
+      chr(random(65,90)) || random(0,9) ||
+      chr(random(65,90)) || random(0,9) ||
+      chr(random(65,90)) || random(0,9) 
+    FROM generate_series(1,1)
+  ),
+  people(people_id) AS (
+    SELECT person_id FROM people 
+    OFFSET 3 LIMIT 20
+  )
+  SELECT code, people_id FROM reservation_code CROSS JOIN people
+);
+
+WITH RECURSIVE numbers(n) AS (
+  SELECT 1
+  UNION ALL
+  SELECT n + 1 FROM numbers WHERE n < 100
+)
+SELECT * FROM numbers;a
+
+
+
+
+
+SELECT * FROM people LIMIT 2;
+
+INSERT INTO 
+
+DROP TABLE IF EXISTS reservation_passangers;
+CREATE TABLE reservation_passengers (
+    	reservation_code CHAR(10),
+    	person_id CHAR(9),
+        FOREIGN KEY (reservation_code) REFERENCES reservations(reservation_code),
+    	FOREIGN KEY (person_id) REFERENCES people(person_id),
+    	FOREIGN KEY (seat_row, seat_column, flight_id) REFERENCES seat_assignments(seat_row, seat_column, flight_id)
+);
+
+
+
+	
