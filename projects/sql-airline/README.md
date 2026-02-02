@@ -89,7 +89,7 @@ The project includes SQL queries to answer airline business questions, such as:
 
   - converts departure/arrival times into origin/destination local time using airport time zones 
 
- **Tools / Technologies**
+ **6) Tools / Technologies**
 
 PostgreSQL (relational modeling, constraints, recursive CTEs)
 
