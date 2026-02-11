@@ -11,21 +11,8 @@ questions, clean analysis, and clear insights.
 - Excel / Google Sheets
 - Data Cleaning & EDA
 
-## 📁 Projects
-### 1. SQL Analysis – Business Metrics
-- Analyzed user behavior and revenue trends using SQL
-- Techniques: joins, CTEs, window functions
-- 👉 [View Project](./projects/sql_business_metrics)
-
-### 2. Python Analysis – Exploratory Data Analysis
-- Cleaned and analyzed real-world datasets using pandas
-- Visualized trends and insights
-- 👉 [View Project](./projects/python_eda)
-
-### 3. Dashboard – Tableau / Power BI
-- Built interactive dashboards for stakeholders
-- 👉 [View Dashboard](./projects/dashboard)
+## 📁 Projects (In the process of formatting them, if interested shoot me an email at kyleng5652@gmail.com)
 
 ## 📫 Contact
 - GitHub: https://github.com/applekyle5652
-- LinkedIn: (add this)
+- Email: kyleng5652@gmail.com
