@@ -19,6 +19,7 @@ Hi! I'm Kyle — a data analyst with experience in SQL, Python, and data visuali
 Designed and built a fully normalized relational airline database in PostgreSQL simulating real-world operations — aircraft seating, international multi-leg flight scheduling across time zones, group reservations, and seat assignment. Used generate_series() and recursive CTEs to programmatically generate realistic data at scale (~1,200 passengers, weekly flights across 4 international routes, full seat maps), and wrote Faker-powered synthetic data generation via plpython3u. Included analytics queries for profit estimation, seat occupancy, and time-zone-aware scheduling.
 
 **Tools:** PostgreSQL
+
 **Key skills demonstrated:** Schema design, normalization, complex joins, query optimization]
 
 ---
@@ -31,6 +32,7 @@ Built a Graph Attention Network (GAT) to predict the next event in an NBA posses
 Results: The GAT substantially outperformed the LLM baseline across all metrics — 52% Top-1 accuracy and 87% Top-3 accuracy vs. under 12% Top-1 for either LLM prompting strategy — demonstrating that explicit relational structure captures basketball dynamics far better than unstructured text-based prediction. A class-weighted training variant improved recall on rare events (ejections, timeouts, violations) at a small cost to overall accuracy.
 
 **Tools:** Python, PyTorch Geometric, Graph Attention Networks, Mistral 7B (prompting), pandas
+
 **Key skills demonstrated:** graph neural network design, multi-agent relational modeling, feature engineering, model evaluation (Top-K accuracy, macro-F1, confusion matrix analysis), LLM baselining, academic research/writing
 
 ---
@@ -43,6 +45,7 @@ Built a spatial risk index to identify which emperor penguin breeding colonies a
 **Results:** Sea-ice instability emerged as the primary risk driver continent-wide, with a subset of colonies showing compounded risk where unstable ice overlaps with proximity to research stations or travel routes — flagging specific sites for conservation priority.
 
 **Tools:** ArcGIS (raster calculator, zonal statistics, distance accumulation), Antarctic Polar Stereographic projection (EPSG:3031), ArcGIS StoryMaps (interactive dashboard)
+
 **Key skills demonstrated:** spatial risk modeling, raster analysis, multi-source geospatial data integration, GIS projection handling, interactive dashboard design, technical writing
 ---
 
