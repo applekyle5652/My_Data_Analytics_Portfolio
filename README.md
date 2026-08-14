@@ -35,7 +35,7 @@ Key skills demonstrated: graph neural network design, multi-agent relational mod
 
 ---
 
-### 🐧 Penguin_Risk
+### 🐧 [Penguin_Risk](./projects/Penguin_Risk) · [Live StoryMap →](https://storymaps.arcgis.com/stories/a74ed40b3658492494ab44020297eacd)
 
 Type: GIS spatial analysis — ArcGIS StoryMap
 
