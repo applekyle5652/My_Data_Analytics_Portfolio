@@ -20,7 +20,7 @@ Designed and built a fully normalized relational airline database in PostgreSQL 
 
 **Tools:** PostgreSQL
 
-**Key skills demonstrated:** Schema design, normalization, complex joins, query optimization]
+**Key skills demonstrated:** Schema design, normalization, complex joins, query optimization
 
 ---
 
