@@ -11,7 +11,7 @@ questions, clean analysis, and clear insights.
 - Excel / Google Sheets
 - Data Cleaning & EDA
 
-## 📁 Projects (In the process of formatting them, if interested shoot me an email at kyleng5652@gmail.com)
+## 📁 Projects
 
 ## 📫 Contact
 - GitHub: https://github.com/applekyle5652
