@@ -35,20 +35,22 @@ Key skills demonstrated: graph neural network design, multi-agent relational mod
 
 ---
 
-### 🐧 [Penguin_Risk](./projects/Penguin_Risk)
-**Type:** Machine learning / predictive modeling
+### 🐧 Penguin_Risk
 
-[Replace with 2-3 sentences: What risk were you modeling? What dataset did you use (e.g., Palmer Penguins)? What was your approach and result?]
+Type: GIS spatial analysis — ArcGIS StoryMap
 
-**Tools:** Python (pandas, scikit-learn, matplotlib/seaborn)
-**Key skills demonstrated:** [e.g., classification, EDA, model comparison]
+Built a spatial risk index to identify which emperor penguin breeding colonies across Antarctica are most vulnerable to environmental and human stressors, combining colony location data (MAPPPD), sea-ice concentration rasters (U.S. National Ice Center), and human activity layers — research stations, camps, routes (Australian Antarctic Data Centre). Used raster calculation and reclassification in ArcGIS to build two component indices — an ice-stability risk surface (scored 0–1 by ice type: fast, multi-year, first-year, thin, open water) and a distance-based human disturbance risk surface — then combined them into a weighted composite risk index per colony using zonal statistics, with sea-ice risk weighted more heavily as the dominant ecological driver.
 
+Results: Sea-ice instability emerged as the primary risk driver continent-wide, with a subset of colonies showing compounded risk where unstable ice overlaps with proximity to research stations or travel routes — flagging specific sites for conservation priority.
+
+Tools: ArcGIS (raster calculator, zonal statistics, distance accumulation), Antarctic Polar Stereographic projection (EPSG:3031), ArcGIS StoryMaps (interactive dashboard)
+Key skills demonstrated: spatial risk modeling, raster analysis, multi-source geospatial data integration, GIS projection handling, interactive dashboard design, technical writing
 ---
 
 > 📌 More projects in progress — check back for updates, or reach out below if you'd like to see work in development.
 
 ## 📬 Contact
 
-- Email: [use a contact form or LinkedIn instead of plain-text email to avoid spam bots]
-- LinkedIn: [add your LinkedIn URL]
+- Email: kyleng5652@gmail.com
+- LinkedIn: www.linkedin.com/in/kyleng5652
 - GitHub: [@applekyle5652](https://github.com/applekyle5652)
