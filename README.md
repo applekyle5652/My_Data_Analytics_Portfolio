@@ -26,10 +26,12 @@ Designed and built a fully normalized relational airline database in PostgreSQL 
 ### 🏀 [GAT_Basketball_Next_Level_Action](./projects/GAT_Basketball_Next_Level_Action)
 **Type:** Machine learning / predictive modeling
 
-[Replace with 2-3 sentences: What were you predicting — player performance, game outcomes, next action? What data did you use? What model(s) did you build and how did they perform?]
+Built a Graph Attention Network (GAT) to predict the next event in an NBA possession (e.g., shot, rebound, foul, substitution) using play-by-play data from the 2000–2001 NBA season. Each possession snapshot is modeled as a fully connected graph over the ten on-court players, with node features combining learned player embeddings, lineup/role indicators, offense-defense status, and engineered temporal context (score margin, game clock, possession progress, recent event history). Trained a 3-layer multi-head GAT with PyTorch Geometric and benchmarked it against a Mistral 7B LLM baseline using zero-shot and few-shot prompting on textual play-by-play descriptions.
 
-**Tools:** Python (pandas, scikit-learn, matplotlib)
-**Key skills demonstrated:** [e.g., feature engineering, classification, model evaluation]
+Results: The GAT substantially outperformed the LLM baseline across all metrics — 52% Top-1 accuracy and 87% Top-3 accuracy vs. under 12% Top-1 for either LLM prompting strategy — demonstrating that explicit relational structure captures basketball dynamics far better than unstructured text-based prediction. A class-weighted training variant improved recall on rare events (ejections, timeouts, violations) at a small cost to overall accuracy.
+
+Tools: Python, PyTorch Geometric, Graph Attention Networks, Mistral 7B (prompting), pandas
+Key skills demonstrated: graph neural network design, multi-agent relational modeling, feature engineering, model evaluation (Top-K accuracy, macro-F1, confusion matrix analysis), LLM baselining, academic research/writing
 
 ---
 
