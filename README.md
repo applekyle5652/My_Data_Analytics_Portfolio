@@ -47,6 +47,7 @@ Built a spatial risk index to identify which emperor penguin breeding colonies a
 **Tools:** ArcGIS (raster calculator, zonal statistics, distance accumulation), Antarctic Polar Stereographic projection (EPSG:3031), ArcGIS StoryMaps (interactive dashboard)
 
 **Key skills demonstrated:** spatial risk modeling, raster analysis, multi-source geospatial data integration, GIS projection handling, interactive dashboard design, technical writing
+
 ---
 
 > 📌 More projects in progress — check back for updates, or reach out below if you'd like to see work in development.
