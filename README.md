@@ -16,7 +16,7 @@ Hi! I'm Kyle — a data analyst with experience in SQL, Python, and data visuali
 ### ✈️ [Airline_Database] ./projects/Airline_Database
 **Type:** SQL database design & querying
 
-[Replace with 2-3 sentences: What was the business question? What did the database model — flights, bookings, routes? What kind of queries did you write — joins, aggregations, subqueries?]
+Designed and built a fully normalized relational airline database in PostgreSQL simulating real-world operations — aircraft seating, international multi-leg flight scheduling across time zones, group reservations, and seat assignment. Used generate_series() and recursive CTEs to programmatically generate realistic data at scale (~1,200 passengers, weekly flights across 4 international routes, full seat maps), and wrote Faker-powered synthetic data generation via plpython3u. Included analytics queries for profit estimation, seat occupancy, and time-zone-aware scheduling.
 
 **Tools:** PostgreSQL
 **Key skills demonstrated:** Schema design, normalization, complex joins, query optimization]
